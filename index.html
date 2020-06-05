@@ -9,7 +9,7 @@
     <style>
         .window {
             background-color: red;
-            border: 1px solid #346789;
+            /* border: 1px solid #346789; */
             border-radius: 0.5em;
             box-shadow: 2px 2px 5px #AAAAAA;
             color: black;
@@ -35,6 +35,15 @@
         .button_container {
             margin: 5px;
             background-color: #aaaaaa
+        }
+
+        /* .jtk-endpoint {
+            background: yellow;
+        } */
+
+        .aRedEndpoint svg circle {
+            fill: red;
+            stroke: yellow;
         }
     </style>
 
@@ -74,70 +83,155 @@
 
     <script>
         jsPlumb.ready(function () {
-            var endpointOptions = { isSource: true, isTarget: true };
-            var window3Endpoint = jsPlumb.addEndpoint('element1', { anchor: "Top" }, endpointOptions);
-            var window4Endpoint = jsPlumb.addEndpoint('element2', { anchor: "BottomCenter" }, endpointOptions);
 
-            jsPlumb.connect({
-                source: window3Endpoint,
-                target: window4Endpoint,
-                connector: "Flowchart",
-                ConnectionOverlays: [
-                    [
-                        'Arrow', { location: 1, id: 'arrow', length: 14, foldback: 0.8 }
-                    ]
-                ],
-                paintStyle: { strokeWidth: 5, stroke: 'red' },
-                connectorOverlays: [
-                    "Arrow", { foldback: 10, location: 1, width: 10 }
-                ],
-                overlays: [
-                    ["Label", {
-                        events: {
-                            click: function (labelOverlay, originalEvent) {
-                                console.log("click on label overlay for :" + labelOverlay.component);
-                            }
-                        }
-                    }]
-                ]
-            });
+            // jsPlumb.connect({
+            //     source: "element1",
+            //     target: "element2",
+            //     connector: "Flowchart",
+            //     endpointHoverStyle: { fill: "red" },
+            //     endpointStyle: { fill: "transparent" },
+            //     cssClass: "aRedEndpoint",
+            //     connectorStyle: { strokeWidth: 5, stroke: 'blue' },
+            //     anchor: "AutoDefault",
+            //     overlays: [
+            //         ["Arrow", {
+            //             location: 1,
+            //             id: "arrow",
+            //             length: 14,
+            //             foldback: 0.8
+            //         }]
+            //     ]
+            // });
 
-            endpointOptions = {
+            var e1 = jsPlumb.addEndpoint("element1", {
                 isSource: true,
                 isTarget: true,
-                endpoint: ["Dot", { radius: 10 }],
-                style: { fill: 'blue' },
-                connector: "Flowchart",
-                connectorStyle: { strokeWidth: 10, stroke: 'blue' },
-                // scope: "blueline",
-                dropOptions: {
-                    drop: function (e, ui) {
-                        alert('drop!');
-                    }
-                }
-            };
-
-            var sourceEndpoint = {
-                isSource: true, endpoint: "Dot",
-                connector: "Flowchart",
-                connectorStyle: { strokeWidth: 10, stroke: 'blue' },
-            };
-            var targetEndpoint = {
-                endpoint: "Dot",
+                connector: ["Flowchart", { cornerRadius: 10, alwaysRespectStubs: true, midpoint: 40 }],
+                connectorStyle: { strokeWidth: 2, stroke: 'blue', cornerRadius: 20 },
+                // connector: ["Flowchart", { cornerRadius: 10, midpoint: 90 }],
+                midpoint: 90,
+                // cornerRadius: 20,
+                // connector: ["StateMachine", { margin: 20, curviness: 15 }],
+                anchor: "AutoDefault",
                 maxConnections: 5,
-                connector: "Flowchart",
-                connectorStyle: { strokeWidth: 10, stroke: 'blue' },
-            };
+                connector: ["Flowchart", { stub: [10, 10], gap: 1, cornerRadius: 5, alwaysRespectStubs: false }],
+                // connectorStyle: { strokeStyle: "red", lineWidth: 1, outlineColor: "red", outlineWidth: 1 },
+                // connectorHoverStyle: { strokeStyle: "red" },
+                onMaxConnections: function (info, e) {
+                    alert("Maximum connections (" + info.maxConnections + ") reached");
+                },
+                // fill: 'none',
+                // endpoint: ["Rectangle", { radius: 100 }],
+                // endpointStyle: { radius: 1, fillStyle: "#000000" },
+            });
 
-            jsPlumb.addEndpoint("element1", sourceEndpoint);
-            jsPlumb.makeTarget("element2", targetEndpoint);
+            var e2 = jsPlumb.addEndpoint("element2", {
+                isTarget: true,
+                isTarget: true,
+                connector: "Flowchart",
+                anchor: "AutoDefault",
+                maxConnections: 5,
+
+            });
+
+            // var conn = jsPlumb.connect({
+            //     source: e1,
+            //     target: e2,
+            //     overlays: [
+            //         ["Arrow", {
+            //             location: 1,
+            //             id: "arrow",
+            //             length: 14,
+            //             foldback: 0.8
+            //         }]
+            //     ],
+            //     connector: "Flowchart",
+            //     anchor: "AutoDefault",
+            // });
+
+
+            // var endpointOptions = { isSource: true, isTarget: true };
+            // var window3Endpoint = jsPlumb.addEndpoint('element1', { anchor: "Top" }, endpointOptions);
+            // var window4Endpoint = jsPlumb.addEndpoint('element2', { anchor: "BottomCenter" }, endpointOptions);
+
+            // jsPlumb.connect({
+            //     source: window3Endpoint,
+            //     target: window4Endpoint,
+            //     connector: "Flowchart",
+            //     ConnectionOverlays: [
+            //         [
+            //             'Arrow', { location: 1, id: 'arrow', length: 14, foldback: 0.8 }
+            //         ]
+            //     ],
+            //     paintStyle: { strokeWidth: 5, stroke: 'red' },
+            //     connectorOverlays: [
+            //         "Arrow", { foldback: 10, location: 1, width: 10 }
+            //     ],
+            //     overlays: [
+            //         ["Label", {
+            //             events: {
+            //                 click: function (labelOverlay, originalEvent) {
+            //                     console.log("click on label overlay for :" + labelOverlay.component);
+            //                 }
+            //             }
+            //         }]
+            //     ]
+            // });
+
+            // endpointOptions = {
+            //     isSource: true,
+            //     isTarget: true,
+            //     endpoint: ["Dot", { radius: 100 }],
+            //     style: { fill: 'blue' },
+            //     connector: "Flowchart",
+            //     connectorStyle: { strokeWidth: 5, stroke: 'blue' },
+            //     endpointStyle: { fill: "blue", outlineStroke: "black", outlineWidth: 60 },
+            //     // scope: "blueline",
+            //     dropOptions: {
+            //         drop: function (e, ui) {
+            //             alert('drop!');
+            //         }
+            //     }
+            // };
+
+            jsPlumb.Defaults.Overlays = [
+                ["Arrow", {
+                    location: 1,
+                    id: "arrow",
+                    length: 14,
+                    foldback: 0.8
+                }]
+            ];
+
+            // var sourceEndpoint = {
+            //     isSource: true, endpoint: "Dot",
+            //     connector: "Flowchart",
+            //     connectorStyle: { strokeWidth: 5, stroke: 'blue' },
+            // };
+            // var targetEndpoint = {
+            //     endpoint: "Dot",
+            //     maxConnections: 5,
+            //     connector: "Flowchart",
+            //     connectorStyle: { strokeWidth: 10, stroke: 'blue' },
+            // };
+
+            // jsPlumb.addEndpoint("element1", sourceEndpoint);
+            // jsPlumb.makeTarget("element2", targetEndpoint);
+
+            jsPlumb.bind('contextmenu', (function (that) {
+                return function (connection, e) {
+                    // jsPlumb.deleteConnection(connection);
+                    console.log(connection);
+                    console.log(e);
+
+                };
+            }(this)));
 
             jsPlumb.bind('dblclick', (function (that) {
                 return function (connection, e) {
+                    // jsPlumb.deleteConnection(connection);
+                    console.log(connection);
                     console.log(e);
-                    jsPlumb.deleteConnection(connection);
-                    window.jsPlumb = jsPlumb;
-                    // this.detach(connection);
                 };
             }(this)));
 
@@ -153,7 +247,7 @@
                 isTarget: true,
                 maxConnections: 5,
                 connector: "Flowchart",
-                connectorStyle: { strokeWidth: 10, stroke: 'blue' },
+                connectorStyle: { strokeWidth: 5, stroke: 'blue' },
                 anchor: "AutoDefault"
             };
 
@@ -162,11 +256,12 @@
 
                 var parentnode = $(this)[0].parentNode.parentNode;
 
+                console.log('Aqui');
+
                 jsPlumb.addEndpoint(
                     parentnode,
                     anEndpointDestination
                 );
-
             });
 
             // Remove anchor 
@@ -198,6 +293,19 @@
 
                 //create new window and add it to the body
                 $('<div class="window" id="' + id + '" >').appendTo('body').html($(("#container0"))[0].innerHTML);
+
+                jsPlumb.addEndpoint(id, {
+                    isSource: true,
+                    isTarget: true,
+                    connector: ["Flowchart", { cornerRadius: 10, margin: 10, curviness: 15 }],
+                    connectorStyle: { strokeWidth: 2, stroke: 'blue', cornerRadius: 20 },
+                    anchor: "AutoDefault",
+                    maxConnections: 5,
+                    connector: ["Flowchart", { stub: [10, 10], gap: 1, cornerRadius: 5, alwaysRespectStubs: false }],
+                    onMaxConnections: function (info, e) {
+                        alert("Maximum connections (" + info.maxConnections + ") reached");
+                    },
+                });
 
                 //set jsplumb properties
                 jsPlumb.draggable($('#' + id));
