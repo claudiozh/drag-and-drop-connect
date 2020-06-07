@@ -15,6 +15,7 @@
 # Anotações
 
 * Pode criar Endpoints de forma separada e depois fazer a conexão
+* Lembrar de deixar margem zero no componente que utiliza Drawer
 
 # Regras do Drag and Drop Connection no chat
 
