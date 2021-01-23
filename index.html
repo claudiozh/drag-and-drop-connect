@@ -4,161 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Drag and drop - JSPLUMB</title>
+
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        .bloco {
-            background-color: red;
-            border-radius: 0.5em;
-            box-shadow: 2px 2px 5px #AAAAAA;
-            color: black;
-            height: 5em;
-            position: absolute;
-            width: 5em;
+        body {
+            background: #323232;
         }
-        
-        .bloco:hover {
-            box-shadow: 2px 2px 19px #AAAAAA;
+
+        .btn-fab {
+            background: #ef4f4f;
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #f15050;
+            color: #ffffff;
             cursor: pointer;
+            font-size: 14pt;
         }
-        
-        .button_add,
-        .button_add_bloco,
-        .button_remove,
-        .button {
-            background-color: deepskyblue;
-            text-align: center;
-            border: 1px solid;
-        }
-        
-        .button_container {
-            margin: 5px;
-            background-color: #aaaaaa
-        }
-        /* .jtk-endpoint {
-            background: yellow;
-        } */
-        
-        .aRedEndpoint svg circle {
-            fill: red;
-            stroke: yellow;
+
+        .bloco {
+            position: absolute;
+            background: #eeeeee;
+            border-radius: 5px;
+            width: 5em;
+            height: 4em;
+            cursor: grabbing;
         }
     </style>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.12.6/js/jsplumb.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.12.6/js/jsplumb.min.js"></script>
 </head>
 
 <body>
 
-    <!-- Adds new blocos to the page -->
-    <div class="bloco" style="left: 600px" id="details">
-        <p style="text-align: center">Bloco</p>
-        <div class="button_container">
-            <div class="button_add_bloco">Novo</div>
-        </div>
-    </div>
+    <button class="btn-fab" onclick="handleCreateNewBloco()">
+        <i class="fa fa-plus"></i>
+    </button>
 
     <script>
-        function getBlocos() {
-
-        }
-
-        function createNewBloco() {
-            var id = "dynamic_" + $(".bloco").length;
-
-            //create new bloco and add it to the body
-            $('<div class="bloco" id="' + id + '" >').appendTo('body');
-
-            jsPlumb.addEndpoint(id, {
-                isSource: true,
-                isTarget: true,
-                connector: ["Flowchart", {
-                    cornerRadius: 10,
-                    margin: 10,
-                    curviness: 15
-                }],
-                connectorStyle: {
-                    strokeWidth: 2,
-                    stroke: 'blue',
-                    cornerRadius: 20
-                },
-                anchor: "AutoDefault",
-                maxConnections: 5,
-                connector: ["Flowchart", {
-                    stub: [10, 10],
-                    gap: 1,
-                    cornerRadius: 5,
-                    alwaysRespectStubs: false
-                }],
-                overlays: [
-                    ["Label", {
-                        events: {
-                            click: function(labelOverlay, originalEvent) {
-                                console.log("click on label overlay for :" + labelOverlay.component);
-                            }
-                        }
-                    }]
-                ],
-                onMaxConnections: function(info, e) {
-                    alert("Maximum connections (" + info.maxConnections + ") reached");
-                },
-            });
-
-            jsPlumb.draggable($('#' + id));
-        }
-
-
-        jsPlumb.ready(function() {
-
-            jsPlumb.connect({
-                source: "e1",
-                target: "e2",
-                connector: "Flowchart",
-                endpointHoverStyle: {
-                    fill: "red"
-                },
-                endpointStyle: {
-                    fill: "transparent"
-                },
-                cssClass: "aRedEndpoint",
-                connectorStyle: {
-                    strokeWidth: 5,
-                    stroke: 'blue'
-                },
-                anchor: "AutoDefault",
-                overlays: [
+        function initJsplumb() {
+            jsPlumb.ready(function () {
+                jsPlumb.Defaults.Overlays = [
                     ["Arrow", {
-                        location: 1,
                         id: "arrow",
+                        location: 1,
                         length: 14,
                         foldback: 0.8
                     }]
-                ]
+                ];
+
+                jsPlumb.unbind('connection');
+
+                // jsPlumb.bind("connection", function (info) {
+                //     console.log('Connection', info);
+
+                //     jsPlumb.connect({
+                //         source: info.sourceId,
+                //         target: info.targetId,
+                //         detachable: false,
+                //         connector: ["Flowchart", {
+                //             cornerRadius: 5,
+                //             margin: 0,
+                //             curviness: 0
+                //         }],
+                //         connectorStyle: {
+                //             strokeWidth: 1,
+                //             stroke: '#fff',
+                //             cornerRadius: 20
+                //         },
+                //         anchors: "Continuous",
+                //         maxConnections: 5
+                //     });
+
+                //     jsPlumb.unbind('connection');
+                // });
+            });
+        }
+
+        function generateIdByTotalBlocos() {
+            return "dynamic_" + $(".bloco").length;
+        }
+
+        function handleCreateNewBloco() {
+
+            const newBlocoId = generateIdByTotalBlocos();
+
+            $('<div class="bloco" id="' + newBlocoId + '" >').appendTo('body');
+
+            jsPlumb.addEndpoint(newBlocoId, {
+                isSource: true,
+                isTarget: true,
+                connector: ["Flowchart", {
+                    cornerRadius: 5,
+                    margin: 0,
+                    curviness: 0
+                }],
+                connectorStyle: {
+                    strokeWidth: 1,
+                    stroke: '#fff',
+                    cornerRadius: 20
+                },
+                anchors: "Continuous",
+                maxConnections: 5
             });
 
-            jsPlumb.Defaults.Overlays = [
-                ["Arrow", {
-                    location: 1,
-                    id: "arrow",
-                    length: 14,
-                    foldback: 0.8
-                }]
-            ];
+            jsPlumb.draggable($('#' + newBlocoId));
+        }
 
-            jsPlumb.bind('dblclick', (function(that) {
-                return function(connection, e) {
-                    jsPlumb.deleteConnection(connection);
-                };
-            }(this)));
-
-            //adds new bloco
-            $(".button_add_bloco").click(function() {
-                createNewBloco();
-            });
-        });
+        initJsplumb();
     </script>
-
 </body>
 
 </html>
